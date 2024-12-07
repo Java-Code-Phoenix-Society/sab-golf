@@ -129,7 +129,7 @@
         <dependency>
             <groupId>com.github.Java-Code-Phoenix-Society</groupId>
             <artifactId>AWF</artifactId>
-            <version>88d8644abc</version>
+            <version>release-v0.1.5</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
