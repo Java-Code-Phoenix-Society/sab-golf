@@ -9,9 +9,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class Golf extends JFrame implements JavaAppletAdapter {
+    public Random rand;
     protected static Clip sunkit = null;
     protected static Clip putt = null;
     protected static Clip water = null;
@@ -254,18 +256,19 @@ public class Golf extends JFrame implements JavaAppletAdapter {
     Timer aniTimer;
 
     public Golf() {
+        rand = new Random();
+        redball = 1;
     }
-
 
     public static void main(String[] args) {
         Golf game = new Golf();
-        game.init();
         game.setSize(400, 210);
         game.setTitle("SAB Golf");
         game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        game.setUndecorated(true);
+        //game.setUndecorated(true);
         game.setLocationRelativeTo(null);
         game.setVisible(true);
+        game.init();
         game.start();
     }
 
@@ -274,11 +277,11 @@ public class Golf extends JFrame implements JavaAppletAdapter {
         this.setBackground(Color.gray);
         serverName = this.getParameter("servername");
         serverPath = this.getParameter("serverpath");
-        sunkit = this.getAudioClip(this.getDocumentBase(), "sunkit.au");
-        putt = this.getAudioClip(this.getDocumentBase(), "putt.au");
-        water = this.getAudioClip(this.getDocumentBase(), "water.au");
-        swing = this.getAudioClip(this.getDocumentBase(), "swing.au");
-        sand = this.getAudioClip(this.getDocumentBase(), "sand.au");
+        sunkit = this.getAudioClip(this.getDocumentBase(), "sunkit.wav");
+        putt = this.getAudioClip(this.getDocumentBase(), "putt.wav");
+        water = this.getAudioClip(this.getDocumentBase(), "water.wav");
+        swing = this.getAudioClip(this.getDocumentBase(), "swing.wav");
+        sand = this.getAudioClip(this.getDocumentBase(), "sand.wav");
         greenslope = this.createImage(50, 50);
         clubface = this.createImage(50, 50);
         wind = this.createImage(50, 50);
@@ -411,7 +414,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
             }
 
             String tokenString = "";
-            if (rdata.length() > 0) {
+            if (!rdata.isEmpty()) {
                 StringTokenizer stringTokenizer = new StringTokenizer(rdata, "+");
                 if (stringTokenizer.hasMoreTokens()) {
                     tokenString = stringTokenizer.nextToken();
@@ -784,7 +787,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 }
 
                 String line = "";
-                if (rdata.length() > 0 && gothole == 1) {
+                if (!rdata.isEmpty() && gothole == 1) {
                     StringTokenizer tokenizer = new StringTokenizer(rdata, "+");
                     if (tokenizer.hasMoreTokens()) {
                         line = tokenizer.nextToken();
@@ -1134,22 +1137,22 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                     newSlope = 1;
                     windDX = 0;
 
-                    for (windDY = 0; windDX < 3 && windDX > -3; windDX = (int) (Math.random() * (double) 15.0F) - 7) {
+                    for (windDY = 0; windDX < 3 && windDX > -3; windDX = rand.nextInt(16) - 7) {
                     }
 
                     while (windDY < 3 && windDY > -3) {
-                        windDY = (int) (Math.random() * (double) 15.0F) - 7;
+                        windDY = rand.nextInt(16) - 7;
                     }
 
                     slopeDX = 0;
 
                     for (slopeDY = 0; slopeDX < 2 && slopeDX > -2;
-                         slopeDX = (int) (Math.random() * (double) 15.0F) - 7) {
+                         slopeDX = rand.nextInt(16) - 7) {
                         // processing is on loop
                     }
 
                     while (slopeDY < 2 && slopeDY > -2) {
-                        slopeDY = (int) (Math.random() * (double) 15.0F) - 7;
+                        slopeDY = rand.nextInt(16) - 7;
                     }
                 }
             }
@@ -1902,7 +1905,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                     g.setColor(Color.gray);
                     g.drawRect(7, 37, 586, 190);
                     String var63 = "";
-                    if (tourdata.length() > 0) {
+                    if (!tourdata.isEmpty()) {
                         StringTokenizer var100 = new StringTokenizer(tourdata, "+");
 
                         for (int var141 = 0; var141 < 3; ++var141) {
@@ -1951,17 +1954,17 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                     ++keyClock;
                     if (keyBack == 1) {
                         keyBack = 0;
-                        Graphics var38 = gold.getGraphics();
-                        var38.setColor(new Color(26, 156, 26));
-                        var38.fillRect(0, 0, 600, 300);
+                        Graphics goldGraphics = gold.getGraphics();
+                        goldGraphics.setColor(new Color(26, 156, 26));
+                        goldGraphics.fillRect(0, 0, 600, 300);
                         Color var61 = info1;
                         int var91 = 172;
                         --var91;
                         var91 -= 2;
 
                         for (int var139 = -11; var139 < 12; ++var139) {
-                            var38.setColor(var61);
-                            var38.drawLine(var91 + 50 + 12 - 3, 263, var91 + 50 + 12 + var139 - 3, 241);
+                            goldGraphics.setColor(var61);
+                            goldGraphics.drawLine(var91 + 50 + 12 - 3, 263, var91 + 50 + 12 + var139 - 3, 241);
                         }
 
                         int var162 = var91 + 50 + 13 - 3;
@@ -1969,60 +1972,60 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                         int var195 = 0;
 
                         for (int var215 = 14; var215 > 0; --var215) {
-                            var38.setColor(new Color(255 - var215 * 3, 255 - 3 * var215, 255 - 3 * var215));
-                            var38.fillOval(var162 - var215 - var195 / 4, var183 - var215 + var195 * 2 / 3, var215 * 2, var215 * 2);
+                            goldGraphics.setColor(new Color(255 - var215 * 3, 255 - 3 * var215, 255 - 3 * var215));
+                            goldGraphics.fillOval(var162 - var215 - var195 / 4, var183 - var215 + var195 * 2 / 3, var215 * 2, var215 * 2);
                             --var195;
                         }
 
-                        var38.setColor(Color.black);
-                        var38.drawString("SAB", var91 + 47, 232);
-                        int var230 = (600 - var38.getFontMetrics().stringWidth("SabGOLF v1.3 (c)19971105 Steve A. Baker, All Rights Reserved")) / 2;
-                        var38.drawString("SabGOLF v1.3 (c)19971105 Steve A. Baker, All Rights Reserved", var230, 280);
+                        goldGraphics.setColor(Color.black);
+                        goldGraphics.drawString("SAB", var91 + 47, 232);
+                        int var230 = (600 - goldGraphics.getFontMetrics().stringWidth("SabGOLF v1.3 (c)19971105 Steve A. Baker, All Rights Reserved")) / 2;
+                        goldGraphics.drawString("SabGOLF v1.3 (c)19971105 Steve A. Baker, All Rights Reserved", var230, 280);
                         var91 -= 2;
                         --var91;
-                        var38.setColor(var61);
-                        var38.fillOval(var91 + 100 - 5, 217, 35, 47);
-                        var38.setColor(new Color(26, 156, 26));
-                        var38.fillOval(var91 + 100 + 8 - 5, 225, 19, 31);
-                        var38.fillRect(var91 + 100 + 15 - 5 - 10 + 12, 235, 18, 4);
-                        var38.setColor(var61);
-                        var38.fillRect(var91 + 100 + 15 - 5 - 10 + 12, 239, 18, 8);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillOval(var91 + 100 - 5, 217, 35, 47);
+                        goldGraphics.setColor(new Color(26, 156, 26));
+                        goldGraphics.fillOval(var91 + 100 + 8 - 5, 225, 19, 31);
+                        goldGraphics.fillRect(var91 + 100 + 15 - 5 - 10 + 12, 235, 18, 4);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillRect(var91 + 100 + 15 - 5 - 10 + 12, 239, 18, 8);
                         var91 -= 13;
                         var162 = var91 + 150 + 18;
                         var183 = 240;
                         var195 = 0;
-                        var38.setColor(var61);
-                        var38.fillOval(var162 - 23, var183 - 23, 47, 47);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillOval(var162 - 23, var183 - 23, 47, 47);
 
                         for (int var239 = 15; var239 > 14; --var239) {
-                            var38.setColor(rough1);
-                            var38.fillOval(var162 - var239 - var195 / 4, var183 - var239 + var195 * 2 / 3, var239 * 2 + 1, var239 * 2 + 1);
+                            goldGraphics.setColor(rough1);
+                            goldGraphics.fillOval(var162 - var239 - var195 / 4, var183 - var239 + var195 * 2 / 3, var239 * 2 + 1, var239 * 2 + 1);
                         }
 
-                        var38.setColor(Color.black);
-                        var38.fillRect(var162 - 1, var183 - 1, 3, 2);
-                        var38.setColor(Color.white);
-                        var38.fillRect(var162, var183 - 10, 1, 10);
-                        var38.setColor(Color.orange);
-                        var38.fillRect(var162 + 1, var183 - 10, 3, 3);
+                        goldGraphics.setColor(Color.black);
+                        goldGraphics.fillRect(var162 - 1, var183 - 1, 3, 2);
+                        goldGraphics.setColor(Color.white);
+                        goldGraphics.fillRect(var162, var183 - 10, 1, 10);
+                        goldGraphics.setColor(Color.orange);
+                        goldGraphics.fillRect(var162 + 1, var183 - 10, 3, 3);
                         var91 -= 2;
-                        var38.setColor(var61);
-                        var38.fillOval(var91 + 200 - 4, 241, 23, 23);
-                        var38.setColor(new Color(26, 156, 26));
-                        var38.fillOval(var91 + 200 - 4 + 8, 249, 7, 7);
-                        var38.fillRect(var91 + 200 - 4 + 8, 216, 15, 37);
-                        var38.setColor(var61);
-                        var38.fillRect(var91 + 200 - 4, 216, 8, 37);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillOval(var91 + 200 - 4, 241, 23, 23);
+                        goldGraphics.setColor(new Color(26, 156, 26));
+                        goldGraphics.fillOval(var91 + 200 - 4 + 8, 249, 7, 7);
+                        goldGraphics.fillRect(var91 + 200 - 4 + 8, 216, 15, 37);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillRect(var91 + 200 - 4, 216, 8, 37);
                         var91 += 10;
-                        var38.setColor(var61);
-                        var38.fillOval(var91 + 215 - 4, 216, 23, 23);
-                        var38.setColor(new Color(26, 156, 26));
-                        var38.fillOval(var91 + 215 - 4 + 8, 224, 7, 7);
-                        var38.fillRect(var91 + 215 - 4 + 8, 230, 15, 37);
-                        var38.setColor(var61);
-                        var38.fillRect(var91 + 215 - 4, 228, 8, 35);
-                        var38.fillRect(var91 + 215 - 4 + 8, 232, 15, 8);
-                        var38.dispose();
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillOval(var91 + 215 - 4, 216, 23, 23);
+                        goldGraphics.setColor(new Color(26, 156, 26));
+                        goldGraphics.fillOval(var91 + 215 - 4 + 8, 224, 7, 7);
+                        goldGraphics.fillRect(var91 + 215 - 4 + 8, 230, 15, 37);
+                        goldGraphics.setColor(var61);
+                        goldGraphics.fillRect(var91 + 215 - 4, 228, 8, 35);
+                        goldGraphics.fillRect(var91 + 215 - 4 + 8, 232, 15, 8);
+                        goldGraphics.dispose();
                     }
 
                     Graphics var39 = gold.getGraphics();
@@ -3948,7 +3951,8 @@ public class Golf extends JFrame implements JavaAppletAdapter {
 
     public void run() {
         //if (redball != 0) continue;
-        this.repaint();
+        //this.repaint();
+        this.paint(this.getGraphics());
     }
 
     public synchronized boolean mouseDown(Event event, int x, int y) {
@@ -3969,7 +3973,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
 
         if (keyFace == 1) {
             keyRefresh = 1;
-            if (x > 550 && x < 570 && y > 40 && y < 60 && tname.length() > 0) {
+            if (x > 550 && x < 570 && y > 40 && y < 60 && !tname.isEmpty()) {
                 tname = tname.substring(0, tname.length() - 1);
             }
 
@@ -3980,15 +3984,15 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 player = 1;
                 playerClock = 20;
                 numOfPlayers = 1;
-                if (p2name.length() > 0) {
+                if (!p2name.isEmpty()) {
                     ++numOfPlayers;
                 }
 
-                if (p3name.length() > 0) {
+                if (!p3name.isEmpty()) {
                     ++numOfPlayers;
                 }
 
-                if (p4name.length() > 0) {
+                if (!p4name.isEmpty()) {
                     ++numOfPlayers;
                 }
 
@@ -3997,16 +4001,16 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 player3Total = 0;
                 player4Total = 0;
 
-                for (int var6 = 1; var6 < 19; ++var6) {
-                    player1Par[var6] = 0;
-                    player2Par[var6] = 0;
-                    player3Par[var6] = 0;
-                    player4Par[var6] = 0;
+                for (int psIndex = 1; psIndex < 19; ++psIndex) {
+                    player1Par[psIndex] = 0;
+                    player2Par[psIndex] = 0;
+                    player3Par[psIndex] = 0;
+                    player4Par[psIndex] = 0;
                 }
 
-                if (p2name.length() == 0 && (p3name.length() > 0 || p4name.length() > 0)) {
+                if (p2name.isEmpty() && (!p3name.isEmpty() || !p4name.isEmpty())) {
                     keyFace = 1;
-                    if (p3name.length() == 0) {
+                    if (p3name.isEmpty()) {
                         player = 2;
                         p2name = p4name;
                         tname = p2name;
@@ -4015,7 +4019,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                         p2name = p3name;
                         p3name = p4name;
                         tname = p3name;
-                        if (p3name.length() == 0) {
+                        if (p3name.isEmpty()) {
                             player = 2;
                             tname = p2name;
                         }
@@ -4024,7 +4028,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                     p4name = "";
                 }
 
-                if (p3name.length() == 0 && p4name.length() > 0) {
+                if (p3name.isEmpty() && !p4name.isEmpty()) {
                     player = 3;
                     keyFace = 1;
                     p3name = p4name;
@@ -4082,8 +4086,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 if (x > i * 20 && x < i * 20 + 20 && y > 50 && y < 70 && tname.length() < 10) {
                     switch (i) {
                         case 1:
-                            String var32 = tname;
-                            tname = var32 + "A";
+                            tname += "A";
                             break;
                         case 2:
                             String var31 = tname;
@@ -4182,116 +4185,91 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                             tname = var8 + "Y";
                             break;
                         case 26:
-                            String var10000 = tname;
-                            tname = var10000 + "Z";
+                        default:
+                            tname += "Z";
                     }
                 }
 
                 if (x > i * 20 && x < i * 20 + 20 && y > 30 && y < 50 && tname.length() < 10) {
                     switch (i) {
                         case 1:
-                            String var58 = tname;
-                            tname = var58 + "a";
+                            tname += "a";
                             break;
                         case 2:
-                            String var57 = tname;
-                            tname = var57 + "b";
+                            tname += "b";
                             break;
                         case 3:
-                            String var56 = tname;
-                            tname = var56 + "c";
+                            tname += "c";
                             break;
                         case 4:
-                            String var55 = tname;
-                            tname = var55 + "d";
+                            tname += "d";
                             break;
                         case 5:
-                            String var54 = tname;
-                            tname = var54 + "e";
+                            tname += "e";
                             break;
                         case 6:
-                            String var53 = tname;
-                            tname = var53 + "f";
+                            tname += "f";
                             break;
                         case 7:
-                            String var52 = tname;
-                            tname = var52 + "g";
+                            tname += "g";
                             break;
                         case 8:
-                            String var51 = tname;
-                            tname = var51 + "h";
+                            tname += "h";
                             break;
                         case 9:
-                            String var50 = tname;
-                            tname = var50 + "i";
+                            tname += "i";
                             break;
                         case 10:
-                            String var49 = tname;
-                            tname = var49 + "j";
+                            tname += "j";
                             break;
                         case 11:
-                            String var48 = tname;
-                            tname = var48 + "k";
+                            tname += "k";
                             break;
                         case 12:
-                            String var47 = tname;
-                            tname = var47 + "l";
+                            tname += "l";
                             break;
                         case 13:
-                            String var46 = tname;
-                            tname = var46 + "m";
+                            tname += "m";
                             break;
                         case 14:
-                            String var45 = tname;
-                            tname = var45 + "n";
+                            tname += "n";
                             break;
                         case 15:
-                            String var44 = tname;
-                            tname = var44 + "o";
+                            tname += "o";
                             break;
                         case 16:
-                            String var43 = tname;
-                            tname = var43 + "p";
+                            tname += "p";
                             break;
                         case 17:
-                            String var42 = tname;
-                            tname = var42 + "q";
+                            tname += "q";
                             break;
                         case 18:
-                            String var41 = tname;
-                            tname = var41 + "r";
+                            tname += "r";
                             break;
                         case 19:
-                            String var40 = tname;
-                            tname = var40 + "s";
+                            tname += "s";
                             break;
                         case 20:
-                            String var39 = tname;
-                            tname = var39 + "t";
+                            tname += "t";
                             break;
                         case 21:
-                            String var38 = tname;
-                            tname = var38 + "u";
+                            tname += "u";
                             break;
                         case 22:
-                            String var37 = tname;
-                            tname = var37 + "v";
+                            tname += "v";
                             break;
                         case 23:
-                            String var36 = tname;
-                            tname = var36 + "w";
+                            tname += "w";
                             break;
                         case 24:
-                            String var35 = tname;
-                            tname = var35 + "x";
+                            tname += "x";
                             break;
                         case 25:
-                            String var34 = tname;
-                            tname = var34 + "y";
+                            tname += "y";
                             break;
                         case 26:
-                            String var33 = tname;
-                            tname = var33 + "z";
+                        default:
+                            tname += "z";
                     }
                 }
             }
@@ -4382,11 +4360,11 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 ballDX = ballDX * globalSize * 2;
                 ballDY = ballDY * globalSize * 2;
                 if (club != 12) {
-                    ballDX += (int) (Math.random() * (double) 7.0F) - 3;
-                    ballDY += (int) (Math.random() * (double) 7.0F) - 3;
+                    ballDX += rand.nextInt(8) - 3;
+                    ballDY += rand.nextInt(8) - 3;
                 } else {
-                    ballDX += (int) (Math.random() * (double) 3.0F) - 1;
-                    ballDY += (int) (Math.random() * (double) 3.0F) - 1;
+                    ballDX += rand.nextInt(4) - 1;
+                    ballDY += rand.nextInt(4) - 1;
                 }
 
                 int var5 = 100;
@@ -4398,7 +4376,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                     case 1:
                         var5 = 120;
                         if (sandPlug == 1) {
-                            var5 = 130 + (int) (Math.random() * (double) 20.0F);
+                            var5 = 130 + rand.nextInt(21);
                         }
                     case 2:
                     default:
@@ -4410,7 +4388,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                         var5 = 110;
                         break;
                     case 6:
-                        var5 = 120 + (int) (Math.random() * (double) 40.0F);
+                        var5 = 120 + rand.nextInt(41);
                 }
 
                 ballDX = ballDX * 3 * (power + 1) / var5;
@@ -4469,7 +4447,7 @@ public class Golf extends JFrame implements JavaAppletAdapter {
                 sandPlug = 0;
                 button = 1;
                 picked = 0;
-                int var10002 = playerStrokes[player]++;
+                playerStrokes[player]++;
             }
 
             return true;
